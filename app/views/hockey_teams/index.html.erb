@@ -1,0 +1,40 @@
+<p style="color: green"><%= notice %></p>
+
+<%= button_to "Scrape data", scrape_hockey_teams_path %>
+<br>
+<%= link_to "New hockey team", new_hockey_team_path %>
+
+<h1>Hockey teams</h1>
+<p >Teams available : <%= @hockey_teams.count %></p>
+
+<table>
+  <tr>
+    <th>Team name</th>
+    <th>Wins</th>
+    <th>More details</th>
+  </tr>
+  <% @hockey_teams.each do |hockey_team| %>
+    <tr>
+      <td><%= hockey_team.name %></td>
+      <td><%= hockey_team.wins %></td>
+      <td><%= link_to "Show this hockey team", hockey_team %></td>
+    </tr>
+  <% end %>
+</table>
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
