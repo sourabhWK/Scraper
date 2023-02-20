@@ -5,12 +5,6 @@ class HockeyTeamsController < ApplicationController
   before_action :set_hockey_team, only: %i[ show edit update destroy]
   before_action :initialize_scrape_data_object
 
-  def scrape 
-    if @scr.scrape
-      redirect_to root_path
-    end
-  end
-
   def index
     @hockey_teams = HockeyTeam.all
   end
@@ -54,6 +48,27 @@ class HockeyTeamsController < ApplicationController
       format.html { redirect_to hockey_teams_url, notice: "Hockey team was successfully destroyed." }
     end
   end
+
+
+  def scrape 
+      if @scr.scrape
+        redirect_to root_path
+      end
+    end
+
+    def upload 
+      if InteractWithS3.new.upload_to_s3
+        redirect_to root_path
+      end
+    end
+
+    def download 
+      # @data_s3 = InteractWithS3.new.create_link_to_download
+      
+      if InteractWithS3.new.create_link_to_download
+        redirect_to root_path
+      end
+    end
 
   private
     def set_hockey_team
