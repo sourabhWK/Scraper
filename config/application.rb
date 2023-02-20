@@ -1,17 +1,15 @@
-require_relative "boot"
+# frozen_string_literal: true
 
-require "rails/all"
+require_relative 'boot'
+require 'rails/all'
 
 Bundler.require(*Rails.groups)
 
-if ['development', 'test'].include? ENV['RAILS_ENV']
-  Dotenv::Railtie.load
-end
+Dotenv::Railtie.load if %w[development test].include? ENV['RAILS_ENV']
 
 module Scraper
+  # This is a top level comment for this file
   class Application < Rails::Application
-    
     config.load_defaults 7.0
-    
   end
 end

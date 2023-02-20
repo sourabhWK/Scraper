@@ -1,30 +1,31 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require 'open-uri'
 
+# This is a top level comment for this file
 class HockeyTeamsController < ApplicationController
-  before_action :set_hockey_team, only: %i[ show edit update destroy]
+  before_action :set_hockey_team, only: %i[show edit update destroy]
   before_action :initialize_scrape_data_object
 
   def index
     @hockey_teams = HockeyTeam.all
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @hockey_team = HockeyTeam.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @hockey_team = HockeyTeam.new(hockey_team_params)
 
     respond_to do |format|
       if @hockey_team.save
-        format.html { redirect_to hockey_team_url(@hockey_team), notice: "Hockey team was successfully created." }
+        format.html { redirect_to hockey_team_url(@hockey_team), notice: 'Hockey team was successfully created.' }
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -34,7 +35,7 @@ class HockeyTeamsController < ApplicationController
   def update
     respond_to do |format|
       if @hockey_team.update(hockey_team_params)
-        format.html { redirect_to hockey_team_url(@hockey_team), notice: "Hockey team was successfully updated." }
+        format.html { redirect_to hockey_team_url(@hockey_team), notice: 'Hockey team was successfully updated.' }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -45,41 +46,41 @@ class HockeyTeamsController < ApplicationController
     @hockey_team.destroy
 
     respond_to do |format|
-      format.html { redirect_to hockey_teams_url, notice: "Hockey team was successfully destroyed." }
+      format.html { redirect_to hockey_teams_url, notice: 'Hockey team was successfully destroyed.' }
     end
   end
 
+  def scrape
+    return unless @scr.scrape
 
-  def scrape 
-      if @scr.scrape
-        redirect_to root_path
-      end
-    end
+    redirect_to root_path
+  end
 
-    def upload 
-      if InteractWithS3.new.upload_to_s3
-        redirect_to root_path
-      end
-    end
+  def upload
+    return unless InteractWithS3.new.upload_to_s3
 
-    def download 
-      # @data_s3 = InteractWithS3.new.create_link_to_download
-      
-      if InteractWithS3.new.create_link_to_download
-        redirect_to root_path
-      end
-    end
+    redirect_to root_path
+  end
+
+  def download
+    # @data_s3 = InteractWithS3.new.create_link_to_download
+
+    return unless InteractWithS3.new.create_link_to_download
+
+    redirect_to root_path
+  end
 
   private
-    def set_hockey_team
-      @hockey_team = HockeyTeam.find(params[:id])
-    end
 
-    def hockey_team_params
-      params.require(:hockey_team).permit(:name, :wins)
-    end
+  def set_hockey_team
+    @hockey_team = HockeyTeam.find(params[:id])
+  end
 
-    def initialize_scrape_data_object
-      @scr = ScrapeData.new
-    end
+  def hockey_team_params
+    params.require(:hockey_team).permit(:name, :wins)
+  end
+
+  def initialize_scrape_data_object
+    @scr = ScrapeData.new
+  end
 end

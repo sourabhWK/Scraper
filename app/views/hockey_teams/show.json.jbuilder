@@ -1,1 +1,3 @@
-json.partial! "hockey_teams/hockey_team", hockey_team: @hockey_team
+# frozen_string_literal: true
+
+json.partial! 'hockey_teams/hockey_team', hockey_team: @hockey_team
