@@ -1,15 +1,44 @@
-# .circleci/config.yml
 version: 2
-
-orbs:
-  ruby: circleci/ruby@3.1.2
-  node: circleci/node@16.17.1
-  browser-tools: circleci/browser-tools@1.3.0
-
 jobs:
   build:
+    working_directory: ~/Scraper
     docker:
-      - image: cimg/ruby:3.1.2-browsers
-    environment:
-      BUNDLE_JOBS: "4"
-      BUNDLE_RETRY: "3"
+      - image: circleci/ruby:3.1.2
+        environment:
+          PGHOST: localhost
+          PGUSER: Scraper
+          RAILS_ENV: development
+      - image: postgres:1.1
+        environment:
+          POSTGRES_USER: myuser1
+          POSTGRES_DB: Scraper_development
+          POSTGRES_PASSWORD: "1234"
+    steps:
+      - checkout
+
+      # Restore Cached Dependencies
+      - type: cache-restore
+        name: Restore bundle cache
+        key: your-app-name-{{ checksum "Gemfile.lock" }}
+
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+
+      # Cache Dependencies
+      - type: cache-save
+        name: Store bundle cache
+        key: your-app-name-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Setup the environment
+      - run: cp .sample.env .env
+
+      # Setup the database
+      - run: bundle exec rake db:setup
+
+      # Run the tests
+      - run: bundle exec rake
