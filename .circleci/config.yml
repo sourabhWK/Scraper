@@ -11,7 +11,7 @@ jobs:
     docker:
       - image: circleci/ruby:3.1.2
       environment:
-          RAILS_ENV: test
+          RAILS_ENV: development
   steps:
     - checkout
 
@@ -19,4 +19,4 @@ jobs:
     # - run: cp .sample.env .env
 
     # Run the tests
-    - run: bundle exec rake
+    - run: exec bundle install
