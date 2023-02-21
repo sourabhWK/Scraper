@@ -11,8 +11,8 @@ jobs:
     #     - master
     docker:
       # specify the version you desire here
-       - image: circleci/ruby:3.1.2
-      
+      - image: circleci/ruby:3.1.2-node-browsers
+
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -20,7 +20,7 @@ jobs:
 
     working_directory: ~/home/oem/Documents/Scraper
 
-    steps:
+     steps:
       - checkout
 
       # Download and cache dependencies
@@ -29,6 +29,7 @@ jobs:
           - v1-dependencies-{{ checksum "Gemfile.lock" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+      - run: sudo apt-get install ruby-full cmake
       - run:
           name: install dependencies
           command: |
@@ -37,4 +38,11 @@ jobs:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-     
+      - run:
+          name: rubocop
+          command: |
+            bundle exec rubocop
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
