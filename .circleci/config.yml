@@ -7,14 +7,11 @@ jobs:
   build:
     docker:
       - image: 'cimg/ruby:3.1.2'
-        # environment:
-        #   PGHOST: localhost
-        #   PGUSER: Scraper
-        #   RAILS_ENV: development
+        environment:
+          PGHOST: localhost
+          PGUSER: Scraper
+          RAILS_ENV: development
     steps:
       - checkout
       - run: bundle install
-workflows:
-  build:
-    jobs:
-      - build
+workflows: null
