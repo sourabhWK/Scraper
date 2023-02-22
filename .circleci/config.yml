@@ -17,5 +17,4 @@ jobs:
 workflows:
   build:
     jobs:
-      - docker
-      - steps
+      - build
