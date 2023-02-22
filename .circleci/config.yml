@@ -14,4 +14,8 @@ jobs:
     steps:
       - checkout
       - run: bundle install
-workflows: null
+workflows:
+  build:
+    jobs:
+      - build
+      - checking
